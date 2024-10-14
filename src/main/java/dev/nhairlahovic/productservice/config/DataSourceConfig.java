@@ -3,6 +3,7 @@ package dev.nhairlahovic.productservice.config;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -13,6 +14,9 @@ import java.io.IOException;
 @Slf4j
 @Configuration
 public class DataSourceConfig {
+
+    @Value("${service-offering.name}")
+    private String serviceOfferingName;
 
     @Bean
     public DataSource dataSource() {
@@ -30,7 +34,7 @@ public class DataSourceConfig {
             // Parse the VCAP_SERVICES environment variable to extract the credentials
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode root = objectMapper.readTree(vcapServices);
-            JsonNode credentials = root.path("osb-postgresql-test").get(0).path("credentials");
+            JsonNode credentials = root.path(serviceOfferingName).get(0).path("credentials");
 
             String url = credentials.get("uri").asText();
             String username = credentials.get("user").asText();
