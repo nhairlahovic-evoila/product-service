@@ -23,7 +23,6 @@ public class DataSourceConfig {
         String vcapServices = System.getenv("VCAP_SERVICES");
 
         if (vcapServices == null || vcapServices.isEmpty()) {
-            // Fallback to H2 in-memory database if VCAP_SERVICES is not found
             log.info("VCAP_SERVICES not found");
             throw new RuntimeException("VCAP_SERVICES not found");
         }
