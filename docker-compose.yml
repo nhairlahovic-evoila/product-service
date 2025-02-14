@@ -6,6 +6,7 @@ services:
     ports:
       - "8080:8080"
     environment:
+#      - SPRING_PROFILES_ACTIVE=test  # Use "test" or "seed" value to populate the database with sample data
       - DB_URL=jdbc:postgresql://db:5432/test-db
       - DB_USERNAME=postgres
       - DB_PASSWORD=postgres
