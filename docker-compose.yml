@@ -3,22 +3,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    image: product-service-h2:latest  # Define the name of the Docker image
+    container_name: app-h2
     ports:
       - "8080:8080"
     environment:
-#      - SPRING_PROFILES_ACTIVE=test  # Use "test" or "seed" value to populate the database with sample data
-      - DB_URL=jdbc:postgresql://db:5432/test-db
-      - DB_USERNAME=postgres
-      - DB_PASSWORD=postgres
-    depends_on:
-      - db
-
-  db:
-    image: postgres:15-alpine
-    container_name: postgres
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_DB: test-db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      - SPRING_PROFILES_ACTIVE=test  # Use "test" or "seed" value to populate the database with sample data
