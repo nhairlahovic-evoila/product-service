@@ -1,34 +1,31 @@
-# Step 1: Build the application using Maven
-FROM maven:3.8.6-eclipse-temurin-17 AS build
+# Node.js stage: Build the Angular frontend
+FROM node:18.19.1 as node
+COPY frontend/ /frontend
+WORKDIR /frontend
+RUN npm install
+RUN npm run build --prod
 
+# Maven build stage: Build the Spring Boot backend
+FROM maven:3.8.6-eclipse-temurin-17 AS build
 WORKDIR /app
 
-# Copy the pom.xml file separately to leverage Docker's build caching
+# Copy pom.xml for caching dependencies
 COPY pom.xml .
-
-# Download dependencies separately to leverage Docker's build caching
 RUN mvn -B dependency:go-offline
 
-# Copy the rest of the source code
+# Copy source code and build the app
 COPY src/ ./src/
-
-# Build the application
+COPY --from=node /frontend/dist/product-service/browser /app/src/main/resources/public
 RUN mvn -B clean package -DskipTests=true
 
 
-#
-# Package stage
-#
-# Step 2: Create the final Docker image with the built application
+# Runtime stage: Create the final Docker image
 FROM openjdk:17-jdk-slim-buster AS runtime
-
 WORKDIR /app
 
-# Copy the built application from the build stage
+# Copy the built Spring Boot app
 COPY --from=build /app/target/*.jar app.jar
 
-# Expose the application's port
+# Expose port and run the app
 EXPOSE 8080
-
-# Start the application
 ENTRYPOINT ["java", "-jar", "app.jar"]
