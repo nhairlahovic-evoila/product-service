@@ -3,6 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    image: product-service:latest
     ports:
       - "8080:8080"
     environment:
