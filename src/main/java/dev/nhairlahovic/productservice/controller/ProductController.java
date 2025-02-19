@@ -1,7 +1,9 @@
 package dev.nhairlahovic.productservice.controller;
 
+import dev.nhairlahovic.productservice.dto.ProductRequestDto;
 import dev.nhairlahovic.productservice.model.Product;
 import dev.nhairlahovic.productservice.service.ProductService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -26,13 +28,13 @@ public class ProductController {
     }
 
     @PostMapping
-    public Product createProduct(@RequestBody Product product) {
-        return productService.createProduct(product);
+    public Product createProduct(@Valid @RequestBody ProductRequestDto productRequest) {
+        return productService.createProduct(productRequest);
     }
 
     @PutMapping("/{id}")
-    public Product updateProduct(@PathVariable Long id, @RequestBody Product product) {
-        return productService.updateProduct(id, product);
+    public Product updateProduct(@PathVariable Long id, @Valid @RequestBody ProductRequestDto productRequest) {
+        return productService.updateProduct(id, productRequest);
     }
 
     @DeleteMapping("/{id}")
