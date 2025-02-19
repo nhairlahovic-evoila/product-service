@@ -1,5 +1,6 @@
 package dev.nhairlahovic.productservice.service;
 
+import dev.nhairlahovic.productservice.dto.ProductRequestDto;
 import dev.nhairlahovic.productservice.model.Product;
 import dev.nhairlahovic.productservice.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,15 +22,16 @@ public class ProductService {
         return productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
     }
 
-    public Product createProduct(Product product) {
+    public Product createProduct(ProductRequestDto requestDto) {
+        Product product = ProductRequestDto.toEntity(requestDto);
         return productRepository.save(product);
     }
 
-    public Product updateProduct(Long id, Product updatedProduct) {
+    public Product updateProduct(Long id, ProductRequestDto requestDto) {
         Product product = getProductById(id);
-        product.setName(updatedProduct.getName());
-        product.setDescription(updatedProduct.getDescription());
-        product.setPrice(updatedProduct.getPrice());
+        product.setName(requestDto.getName());
+        product.setDescription(requestDto.getDescription());
+        product.setPrice(requestDto.getPrice());
         return productRepository.save(product);
     }
 
